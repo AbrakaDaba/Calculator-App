@@ -16,7 +16,6 @@ function printNum(nums, i){
     counter++; 
     display.value += nums[i].innerHTML; 
     displayArr.push(parseInt(nums[i].innerHTML));
-    console.log(displayArr);
 }
 
 
@@ -35,21 +34,48 @@ function clearInput(){
 }
 
 
+function printResult(){
+    console.log(displayArr);
+    let finalNums = [];
+    let finalOperators = [];
+    let number = "";
+    for(i=0;i<displayArr.length; i++){
+        if (isNaN(displayArr[i])){
+            finalNums.push(parseInt(number));
+            finalOperators.push(displayArr[i]);
+            number = ""; 
+        }else{
+            number+= displayArr[i];
+        }
+    }
+    finalNums.push(parseInt(number));
+    console.log(finalNums);
+    console.log(finalOperators);
+
+    // theResult(finalNums, finalOperators)
+    display.value = theResult(finalNums, finalOperators);
+}
+
+
+
+function theResult(finalNums, finalOperators, i){
+    for(i=0; i<finalNums.length; i++){
+        if(finalOperators[i]){
+            return finalNums[i] + finalOperators[i] + finalNums[i+1]
+        }
+    }
+}
+
 function checkInput(operators, j){ 
-    displayArr.push(operators[j].innerHTML);
-    console.log(displayArr[displayArr.length - 1]);
     
     if (isNaN(displayArr[displayArr.length - 1])){
-        // return;
-        displayArr.pop();  
-        console.log(displayArr);
-        console.log('not num');
-        
-    }else{  
+        display.value = display.value.slice(0, -1);
         display.value += operators[j].innerHTML;
-        displayArr.push(operators[j].innerHTML); 
-        console.log('num');
-         
+        displayArr.pop();
+        displayArr.push(operators[j].innerHTML);
+    }else{ 
+        display.value += operators[j].innerHTML;
+        displayArr.push(operators[j].innerHTML);
     }
 }
 
@@ -66,5 +92,6 @@ for(let j=0; j<operators.length; j++){
     })
 }
 
-    btnClear.addEventListener("click", clearInput);
+btnClear.addEventListener("click", clearInput);
+btnResult.addEventListener("click", printResult);
    
