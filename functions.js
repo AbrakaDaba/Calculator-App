@@ -1,3 +1,4 @@
+// "use strict"
 ////////////////////////////
 // // Samopozivajuca F-ja //
 ////////////////////////////
@@ -113,8 +114,8 @@
 //   };
 // }
 
-// var add5 = makeAdder(5);
-// var add10 = makeAdder(10);
+// add5 = makeAdder(5);
+// add10 = makeAdder(10);
 
 // console.log(add5(2));
 // console.log(add5(7));
@@ -170,10 +171,12 @@
 // console.log(add(5));
 
 // Da li su obe add funkcije pure funkcije? Objasniti razliku izmedju njih.
-// Prva je Pure, druga ne. Prva menja ne menja vrednosti variabli, druga da.
+// Prva je Pure, druga ne. Prva ne menja vrednosti variabli, druga da.
+
 
 
 //////////////////////////////////////////////////////
+
 
 
 // Sta je IIFE (Immediately Invoked Function Expression)? Istraziti sta je, kako radi i napisati jedan ili dva primera u kodu.
@@ -181,7 +184,9 @@
 // (function(){})();
 
 
+
 //////////////////////////////////////////////////////
+
 
 
 // Objasniti izvrsavanje narednog koda, liniju po liniju kako bi se izvrsavao. Sta je rezultat nakon svakog console.log izvrsavanja? Zasto?
@@ -212,22 +217,30 @@
 // console.log(counter.currentValue()); // 1
 
 
+
 //////////////////////////////////////////////////////
 
 
+
 // !!!Sta ce biti rezultat datih console.log naredbi?
+
 let arr = [];
-for (let i = 0; i < 3; i++) {
+for (var i = 0; i < 3; i++) { 
     arr[i] = function () {
-        console.log(i);
+        let x = i;
+        console.log(x);
     }
 }
+// console.log(i);
 console.log(arr);
 arr[0](); // 3?
 arr[1](); // 3?
 arr[2](); // 3?
 
 // Da li je ovo bio ocekivani rezultat? Zasto se ovo dogodilo? Sta ce se desiti ako umesto var stavimo let? Sta smo sada dobili kao rezultat? // 0 // 1 // 2
+// arr[0](); // 0
+// arr[1](); // 1
+// arr[2](); // 2
 
 
 
@@ -251,15 +264,23 @@ arr[2](); // 3?
 
 
 // Sta je ‘use strict’? Gde sve moze da se doda u kodu?
-
-
+// The "use strict" directive is only recognized at the beginning of a script or a function.
+// Declared at the beginning of a script, it has global scope (all code in the script will execute in strict mode)
+// Using a variable, without declaring it, is not allowed
+// Deleting a variable (or object or function) is not allowed
+// If the object is not specified, functions in strict mode will return undefined and functions in normal mode will return the global object (window)
 
 // Sta ce ispisati console.log naredbe iz prvog zadatka ako se doda ‘use script’?
+// Reference error , not defined
+
+
+
+//////////////////////////////////////////////////////
 
 
 
 // Sta ce se ispisati u narednim primerima koda. Zasto?
-
+// Reference error , not defined
 
 // let a = {
 //   x: 5,
@@ -267,7 +288,7 @@ arr[2](); // 3?
 //     return this.x;
 //   }
 // }
-// console.log(a.getX());
+// console.log(a.getX()); // 5
 
 
 // let b = {
@@ -277,7 +298,7 @@ arr[2](); // 3?
 //   }
 // }
 // let bx = b.getX;
-// console.log(bx());
+// console.log(bx()); // this is global / undefined
 
 
 // let c = {
@@ -288,7 +309,7 @@ arr[2](); // 3?
 //     };
 //   }
 // }
-// console.log(c.getX()());
+// console.log(c.getX()()); //this is window - global object?
 
 
 // let d = {
@@ -300,46 +321,96 @@ arr[2](); // 3?
 //   }
 // }
 // let dx = d.getX();
-// console.log(dx.call(d));
+// console.log(dx.call(d)); //this becomes d-object
+
+
+
+//////////////////////////////////////////////////////
+
+
 
 // Koja je razlika izmedju call, apply i bind metoda? Sta su rezultati narednih console.log naredbi? Zasto?
+// With call(), an object can use a method belonging to another object.
+// The call() method takes arguments separately. 
+// The apply() method is very handy if you want to use an array instead of an argument list.
+// The apply() method takes arguments as an array.
+// In JavaScript strict mode, if the first argument of the apply() method is not an object, it becomes the owner (object) of the invoked function. In "non-strict" mode, it becomes the global object.
+// bind() changes this
+
+
 
 // function nameAge(name, age) {
+//   this = myCity;
 //   return `My name is ${name}, I am ${age} years young and I come from ${this.city}`;}
 
 // let myCity = {
-//   city: "Belgrade"
+//   city: "Belgrade",
 // }
-
-// console.log('example1: ', nameAge('Pera', 20));
-// console.log('example2: ', nameAge.call(myCity));
-// console.log('example3: ', nameAge.call(myCity, 'Pera', 20));
-// console.log('example4: ', nameAge.call(myCity, ['Pera', 20]));
-// console.log('example5: ', nameAge.call(myCity, ...['Pera', 20]));
-// console.log('example6: ', nameAge.apply(myCity, ['Pera', 20]));
-// nameAge.bind(myCity);
+// var arrr= ["Nis", 50];
+// console.log('example1: ', nameAge('Pera', 20)); // cool, cool, undefined
+//console.log('example2: ', nameAge.call(myCity)); // prosledili smo this. cool, two parameters are missing, undefined
+// console.log('example3: ', nameAge.call(myCity, 'Pera', 20)); //cool, cool, cool
+// console.log('example4: ', nameAge.call(myCity, ['Pera', 20])); //cool, cool?, undefined ARGUMENTI !!!!!!!!!!!!!!!!!!
+// console.log('example5: ', nameAge.call(myCity, ...arrr));// ?  ...['Pera', 20] === 'Pera', 20  // DESTRUCTURING
+// console.log('example6: ', nameAge.apply(myCity, ['Pera', 20])); // 
+// nameAge.bind(myCity); // not assigned to some variable, so nothing will happen
 // console.log('example7: ', nameAge('Pera', 20));
 // let nameAgeBelgrade = nameAge.bind(myCity);
-// console.log('example8: ', nameAgeBelgrade('Pera', 20));
+// console.log(typeof nameAgeBelgrade,'example8: ', nameAgeBelgrade('Pera', 20));
 
 // --------------------------------------------------------------------------------------------------------
 
 // Napisati kod u JS-u koji dohvata:
 // Sve elemente sa klasom ‘btn’, 
-//document.getElementsByClassName('btn');
+// console.log(document.getElementsByClassName('btn')[0]);
+// console.log(document.querySelectorAll('.btn'));
+// document.getElementsByClassName('btn');
+
 // Prvi element sa klasom ‘btn’,
 //document.getElementsByClassName('btn')[0];
+
 // Element sa ID-em ‘unique’,
 // document.getElementById('unique');
+
 // Sve elemente koji su input
 // document.getElementsByTagNames('input');
-// Sve elemente koji su tekstualni input (<input type=”text” />)
+
+// Sve elemente koji su tekstualni input (<input type=”text” />);
+// console.log(document.querySelector('input[type="text"]'));
+
 // Sve elemente koji su tekstualni input i imaju name (<input type=”text” name=”email” />)
+// document.querySelectorAll(input[type="text" name]);
+
 // Sve elemente sa klasom ‘btn’ unutar klase ‘btn-wrapper’
-// Napisati funkciju toggle, koja svaki put kad se pozove toggle-uje klasu jednog elements (dakle prvi put kad se pozove ce dodati klasu, a drugi put kad se pozove ce tu klasu ukloniti itd.)
+// document.querySelectorAll(.btn-wrapper .btn);
+
 
 
 //////////////////////////////////////////////////////
+
+
+
+// Napisati funkciju toggle, koja svaki put kad se pozove toggle-uje klasu jednog elements (dakle prvi put kad se pozove ce dodati klasu, a drugi put kad se pozove ce tu klasu ukloniti itd.)
+
+// let btn = document.querySelector('.bg-change');
+// btn.addEventListener("click", changeColor);
+
+// function changeColor(){
+//  this.classList.toggle('blue');
+// }
+
+// function changeColor(){
+//  if(this.classList.contains('blue')){
+//      this.classList.remove('blue');
+//     }else{
+//      this.classList.add('blue');
+//  };
+// }
+
+
+
+//////////////////////////////////////////////////////
+
 
 
 // 	U pitanju je element:
@@ -349,10 +420,71 @@ arr[2](); // 3?
 // <p>I am first</p>
 // <p>I am second</p>
 // Napisati u JS kodu funkciju koja kad se pozove rotira sadrzaj teksta unutar ovih p tagova (dakle ne treba da elementi zamene mesta u html-u, vec samo njihov tekst da zameni mesta).
+
+
+// let btn = document.querySelector('.btn');
+// let firstP = document.querySelector('[identity="first"]');
+// let secondP = document.querySelector('[identity="second"]');
+ 
+// btn.addEventListener("click", changeContent);
+
+
+// function changeContent(){
+//     let secondContent = secondP.innerHTML;
+//     secondP.innerHTML = firstP.innerHTML;
+//     firstP.innerHTML = secondContent; 
+// }
+
+
+//////////////////////////////////////////////////////
+
+
+
 // Objasniti sta je BOM, i koja je razlika u odnosu na DOM? Koji sve dostupni objekti pripadaju BOM-u? Koji je glavni objekat?
 // Navesti neke metode ili propertije window objekta
+// Browser Object Model - represents browser window with all global functions, objects and  variables as well as propertise like document, innerHeight, alert, location, localStorage...
+// Window is main global object
+
 // Napisati funkciju koja racuna koren jednog broja i vraca duplirano resenje. Koji built-in objekat je koriscen prilikom racunanja korena?
 // 	Primer - ulaz: 64, izlaz: 16 (koren od 64 je 8 pa duplirana vrednost)
+
+// function littleFun(x){
+//  return Math.sqrt(x) * 2;
+// }
+// console.log(littleFun(64));
+
+
 // Napisati funkciju getCurrentDay koja unutar sebe kreira trenutni datum i vraca dan u nedelji u vidu teksta (‘Monday’ ili ‘Tuesday’ itd.). Koristiti switch prilikom odabira dana u nedelji. Koja built-in funkcija je koriscena prilikom dohvatanja trenutnog datuma?
 
+// function getCurrentDay(){
+//     let today = new Date().getDay();
+//     console.log(today);
+// }
+
+
+
+// let randArr = ["papir", "kamen", "makaze"];
+// let btn = document.querySelector('.btn');
+// btn.addEventListener("click", playTheGame);
+
+// function playTheGame(){
+//     let rand = Math.ceil(Math.random() * 3 - 1);
+//     console.log(randArr[rand]);
+// }
+
+
+
+class Calculator {
+    constructor(a,b){
+        this.result = a + b;
+    }
+    getResult(){
+        return this.result;
+    }
+}
+//predefinisani set propertija
+
+let x = new Calculator(5, 3);
+
+console.log(x.getResult());
 

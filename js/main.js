@@ -1,21 +1,40 @@
-let nums = document.querySelectorAll(".calc .calc__num"); 
-let operators = document.querySelectorAll(".calc .calc__operator");  
-let btnDivide = document.querySelector(".calc__divide");
-let btnMultiply = document.querySelector(".calc__multiply");
-let btnResult = document.querySelector(".calc__result");
-let btnClear = document.querySelector(".calc__clear");
-let btnPlus = document.querySelector(".calc__add");
-let btnMinus = document.querySelector(".calc__substract");
+let nums = document.querySelectorAll(".js-num"); 
+let operators = document.querySelectorAll(".js-operator");  
+let btnDivide = document.querySelector(".calc__btn--divide");
+let btnMultiply = document.querySelector(".calc__btn--multiply");
+let btnResult = document.querySelector(".calc__btn--result");
+let btnClear = document.querySelector(".calc__btn--clear");
+let btnPlus = document.querySelector(".calc__btn--add");
+let btnMinus = document.querySelector(".calc__btn--substract");
+let btnMinusPlus = document.querySelector(".calc__btn--minus-plus");
 let display = document.querySelector(".calc__display");
-let finalNums;
-let btnP = document.getElementsByClassName("calc__num")[0];
-console.log(btnP);
- 
+// let btnP = document.getElementsByClassName("calc__btn--num")[0];
+
 
 
 let counter= 0; // typing start position
+let isNumPositive = true;
+
+var finalNums=[];
 let displayArr = []; 
-let currentResult;
+let currentResult = 0;
+
+btnMinusPlus.addEventListener('click' ,checkMinusPlus);
+
+function checkMinusPlus(){ 
+    if(display.value.slice(0,1) !== "-" && display.value!== 0){ 
+        display.value = "-" + display.value;
+        // currentResult += "-";
+        // console.log(currentResult);
+        isNumPositive = false;
+        console.log(isNumPositive);
+    }else{ 
+        display.value = display.value.substring(1);
+        isNumPositive = true;
+        console.log(isNumPositive);
+    }
+}
+
 
 
 function printNum(nums, i){ 
@@ -47,16 +66,10 @@ function checkInput(operators, j){
 }
 
 
-function clearDisplay(){
-    display.value = "";
-    counter = 0;
-    displayArr = [];
-}
 
 
 function prepareNumsAndOperators(){ 
     if(display.value == "NaN" || display.value == ""){ // clicking "=" when display is cleared
-        console.log(display.input);
         display.value =""; 
     }else{
         finalNums = [];
@@ -79,27 +92,43 @@ function prepareNumsAndOperators(){
 
 
 function displayResult(finalNums, finalOperators){
+    console.log(display.value[0]);
+    console.log(finalNums, finalNums[0]);
+    (display.value[0] !== "-")? isNumPositive = true: isNumPositive = false;
+    finalNums[0] = Math.abs(finalNums[0])
+    isNumPositive? finalNums[0] = finalNums[0]: finalNums[0] = finalNums[0] * -1;
+    console.log(isNumPositive, finalNums, finalNums[0]); 
+    console.log(`display Array: ` + displayArr);    
+    console.log(`finalNUms: ` + finalNums); 
+    console.log(`finalOperators: ` + finalOperators); 
     currentResult = finalNums[0];
+    console.log("currentResult: " + currentResult);
     for(i=0; i<finalNums.length - 1; i++){
         if(finalOperators[i]){
             switch(finalOperators[i]){
                 case "+":
                     currentResult += finalNums[i+1];
                     break;
-                case "-":
-                    currentResult -= finalNums[i+1];
-                    break;
-                case "*":
-                    currentResult *= finalNums[i+1];
-                    break;
-                case "/":
-                    currentResult /= finalNums[i+1];
-                    break;
-            } 
-        }
-    }
+                    case "-":
+                        currentResult -= finalNums[i+1];
+                        break;
+                        case "*":
+                            currentResult *= finalNums[i+1];
+                            break;
+                            case "/":
+                                currentResult /= finalNums[i+1];
+                                break;
+                            } 
+                        }
+                    }
+                    
     display.value =  currentResult;
-    // displayArr = [currentResult];
+    console.log("currentResult: " + currentResult);
+    finalNums[0] = currentResult;
+    finalNums = [finalNums[0]];
+    displayArr = [finalNums[0]];
+    console.log(`finalNUms: ` + finalNums);
+    console.log(`finalNUms type: ` + typeof finalNums);
 }
 
 
@@ -113,6 +142,16 @@ for(let j=0; j<operators.length; j++){
     operators[j].addEventListener("click", function(){
         printOperator(operators, j);
     })
+}
+
+
+function clearDisplay(){
+    display.value = "";
+    counter = 0;
+    displayArr = [];
+    finalNums = [];
+    console.log(finalNums);
+    
 }
 
 btnClear.addEventListener("click", clearDisplay);
